@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Travel</title>
+</head>
+<body>
+
+    <h1>Your Albums : </h1>
+
+    {% for album in albums %}
+    <ul>
+        <li><a href="{% url 'details' album.id %}">{{ album.album_title }}</a></li>
+    </ul>
+    {% endfor %}
+
+</body>
+</html>
