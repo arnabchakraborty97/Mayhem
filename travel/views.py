@@ -1,20 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Album
 
 
 def index(request):
     albums = Album.objects.all()
-    context = {
-        'albums': albums,
-    }
-    return render(request, 'travel/index.html', context)
+    return render(request, 'travel/index.html', {'albums': albums})
 
 
 def details(request, album_id):
-    album = Album.objects.get(pk=album_id)
-    context = {
-        'album': album,
-    }
-    return render(request, 'travel/details.html', context)
+    album = get_object_or_404(Album, pk=album_id)
+    return render(request, 'travel/details.html', {'album': album})
 
 

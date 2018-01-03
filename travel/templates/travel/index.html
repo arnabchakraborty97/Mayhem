@@ -10,7 +10,10 @@
 
     {% for album in albums %}
     <ul>
-        <li><a href="{% url 'details' album.id %}">{{ album.album_title }}</a></li>
+        <li>
+            <img src="{{ album.album_logo.url }}" width="200" height="200">
+            <a href="{% url 'travel:details' album.id %}">{{ album.album_title }}</a>
+        </li>
     </ul>
     {% endfor %}
 

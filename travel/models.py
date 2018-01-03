@@ -3,12 +3,16 @@ from django.db import models
 
 class Album(models.Model):
     album_title = models.CharField(max_length=500)
-    album_logo = models.FileField()
+    album_logo = models.ImageField(upload_to='album_logo')
 
     def __str__(self):
         return self.album_title
 
 
-class Photos(models.Model):
+class Photo(models.Model):
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
-    photo_file = models.FileField()
+    photo_file = models.ImageField(upload_to='photo_file')
+    photo_caption = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.photo_caption
