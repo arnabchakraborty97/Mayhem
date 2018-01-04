@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Travel</title>
-</head>
-<body>
+{% extends 'travel/base.html' %}
+{% block title %} Travel {% endblock %}
 
-    <h1>Your Albums : </h1>
+{% block body %}
+    <div class="container">
+        <h1>Your Albums : </h1>
 
-    {% for album in albums %}
-    <ul>
-        <li>
-            <img src="{{ album.album_logo.url }}" width="200" height="200">
-            <a href="{% url 'travel:details' album.id %}">{{ album.album_title }}</a>
-        </li>
-    </ul>
-    {% endfor %}
-
-</body>
-</html>
+        {% for album in albums %}
+        <ul>
+            <li>
+                <img src="{{ album.album_logo.url }}" width="200" height="200" class="img-responsive"><br>
+                <a href="{% url 'travel:details' album.id %}">{{ album.album_title }}</a>
+            </li>
+        </ul>
+        {% endfor %}
+    </div>
+{% endblock %}
