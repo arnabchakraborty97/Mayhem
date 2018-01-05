@@ -1,64 +1,162 @@
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.core.urlresolvers import reverse_lazy
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.views import generic
-from django.views.generic import View
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
+from .forms import UserForm, AlbumForm, PhotoForm
 from .models import Album, Photo
-from .forms import UserForm
 
 
-class IndexView(generic.ListView):
-    template_name = 'travel/index.html'
-    context_object_name = 'albums'
-
-    def get_queryset(self):
-        return Album.objects.all()
-
-
-class DetailView(generic.DetailView):
-    model = Album
-    template_name = 'travel/details.html'
-
-
-class AlbumCreate(CreateView):
-    model = Album
-    fields = ['album_title', 'album_logo']
-
-
-class PhotoCreate(CreateView):
-    model = Photo
-    fields = ['album', 'photo_file', 'photo_caption']
-
-
-class UserFormView(View):
-    form_class = UserForm
-    template_name = 'travel/registration.html'
-
-    def get(self, request):
-        form = self.form_class(None)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-
+def album_create(request):
+    if not request.user.is_authenticated():
+        return render(request, 'travel/login.html')
+    else:
+        form = AlbumForm(request.POST or None, request.FILES or None)
         if form.is_valid():
-            user = form.save(commit=False)
+            album = form.save(commit=False)
+            for a in Album.objects.all():
+                if a.album_title == form.cleaned_data.get("album_title"):
+                    context = {
+                        'album': album,
+                        'form': form,
+                        'error_message': 'Album with same name exists',
+                    }
+                    return render(request, 'travel/album_form.html', context)
+            album.save()
+            return render(request, 'travel/details.html', {'album': album})
+        context = {
+            'form': form,
+        }
+        return render(request, 'travel/album_form.html', context)
 
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user.set_password(password)
-            user.save()
 
-            user = authenticate(username=username, password=password)
+def photo_create(request, album_id):
+    form = PhotoForm(request.POST or None, request.FILES or None)
+    album = get_object_or_404(Album, pk=album_id)
+    if form.is_valid():
+        photo = form.save(commit=False)
+        photo.album = album
+        photo.save()
+        return render(request, 'travel/details.html', {'album': album})
+    context = {
+        'form': form,
+    }
+    return render(request, 'travel/photo_form.html', context)
 
-            if user is not None:
 
-                if user.is_active:
-                    login(request, user)
-                    return redirect('travel:index')
+def album_delete(request, album_id):
+    album = Album.objects.get(pk=album_id)
+    album.delete()
+    albums = Album.objects.filter(user=request.user)
+    return render(request, 'travel/index.html', {'albums': albums})
 
-        return render(request, self.template_name, {'form': form})
+
+def photo_delete(request, album_id, photo_id):
+    album = get_object_or_404(Album, pk=album_id)
+    photo = Photo.objects.get(pk=photo_id)
+    photo.delete()
+    return render(request, 'travel/details.html', {'album': album})
+
+
+def details(request, album_id):
+    if not request.user.is_authenticated():
+        return render(request, 'travel/login.html')
+    else:
+        user = request.user
+        album = get_object_or_404(Album, pk=album_id)
+        return render(request, 'travel/details.html', {'album': album, 'user': user})
+
+
+def index(request):
+    if not request.user.is_authenticated():
+        return render(request, 'travel/login.html')
+    else:
+        albums = Album.objects.filter(user=request.user)
+        all_photos = Photo.objects.all()
+        query = request.GET.get("q")
+        if query:
+            albums = albums.filter(
+                Q(album_title__icontains=query)
+            ).distinct()
+            all_photos = all_photos.filter(
+                Q(photo_caption__icontains=query)
+            ).distinct()
+            context = {
+                'albums': albums,
+                'photos': all_photos,
+            }
+            return render(request, 'travel/index.html', context)
+        else:
+            return render(request, 'travel/index.html', {'albums': albums})
+
+
+def user_logout(request):
+    logout(request)
+    form = UserForm(request.POST or None)
+    return render(request, 'travel/login.html', {'form': form})
+
+
+def user_login(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                albums = Album.objects.filter(user=request.user)
+                return render(request, 'travel/index.html', {'albums': albums})
+            else:
+                return render(request, 'travel/login.html', {'error_message': 'The user is no longer active'})
+    return render(request, 'travel/login.html')
+
+
+def register(request):
+    form = UserForm(request.POST or None)
+
+    if form.is_valid():
+        user = form.save(commit=False)
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user.set_password(password)
+        user.save()
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            if user.is_active():
+                login(request, user)
+                albums = Album.objects.filter(user=request.user)
+                return render(request, 'travel/index.html', {'albums': albums})
+    return render(request, 'travel/registration.html', {'form': form})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
