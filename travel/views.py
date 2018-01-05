@@ -122,7 +122,7 @@ def register(request):
         user = authenticate(username=username, password=password)
 
         if user is not None:
-            if user.is_active():
+            if user.is_active:
                 login(request, user)
                 albums = Album.objects.filter(user=request.user)
                 return render(request, 'travel/index.html', {'albums': albums})
