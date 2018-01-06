@@ -1,6 +1,4 @@
 from django.conf.urls import url
-from django.contrib.auth.views import LoginView, LogoutView
-from django.core.urlresolvers import reverse_lazy
 from . import views
 
 app_name = 'travel'
@@ -18,6 +16,9 @@ urlpatterns = [
 
     # /travel/logout
     url(r'^logout/$', views.user_logout, name='logout'),
+
+    # travel/search/
+    url(r'^search/$', views.search, name='search'),
 
     # /travel/74/
     url(r'^(?P<album_id>[0-9]+)/$', views.details, name='details'),

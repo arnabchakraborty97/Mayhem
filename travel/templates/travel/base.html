@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    {% load staticfiles %}
 
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="{% static 'travel/style.css' %}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Vollkorn+SC" rel="stylesheet">
@@ -31,7 +33,7 @@
             <div class="collapse navbar-collapse" id="topNavBar">
 
                 <!-- Search -->
-                <form class="navbar-form navbar-left" role="search" method="get" action="#">
+                <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'travel:search' %}">
                     <div class="form-group">
                         <input class="form-control" name="q" value="{{ request.GET.q }}" type="text" placeholder="Search" aria-label="Search">
                     </div>

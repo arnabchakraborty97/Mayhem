@@ -70,7 +70,7 @@ def index(request):
         return render(request, 'travel/login.html')
     else:
         albums = Album.objects.filter(user=request.user)
-        all_photos = Photo.objects.all()
+        '''all_photos = Photo.objects.all()
         query = request.GET.get("q")
         if query:
             albums = albums.filter(
@@ -85,7 +85,8 @@ def index(request):
             }
             return render(request, 'travel/index.html', context)
         else:
-            return render(request, 'travel/index.html', {'albums': albums})
+            return render(request, 'travel/index.html', {'albums': albums})'''
+        return render(request, 'travel/index.html', {'albums': albums})
 
 
 def user_logout(request):
@@ -127,6 +128,27 @@ def register(request):
                 albums = Album.objects.filter(user=request.user)
                 return render(request, 'travel/index.html', {'albums': albums})
     return render(request, 'travel/registration.html', {'form': form})
+
+
+def search(request):
+    if not request.user.is_authenticated():
+        return render(request, 'travel/login.html')
+    else:
+        albums = Album.objects.filter(user=request.user)
+        all_photos = Photo.objects.all()
+        query = request.GET.get("q")
+        albums = albums.filter(
+            Q(album_title__icontains=query)
+        ).distinct()
+        all_photos = all_photos.filter(
+            Q(photo_caption__icontains=query)
+        ).distinct()
+        context = {
+            'albums': albums,
+            'photos': all_photos,
+        }
+        return render(request, 'travel/search.html', context)
+
 
 
 
