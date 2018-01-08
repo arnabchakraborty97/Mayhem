@@ -1,24 +1,33 @@
 {% extends 'travel/base.html' %}
 {% block title %} Travel {% endblock %}
+{% load staticfiles %}
 
 {% block body %}
+
     <div class="container">
 
         {% if albums %}
-            <h1>{{ user.username }}'s Albums</h1>
+            <h1 class="text-center">{{ user.username }}'s Albums</h1>
             {% for album in albums %}
-            <ul>
-                <li>
-                    <img src="{{ album.album_logo.url }}" width="200" height="200" class="img-responsive"><br>
-                    <a href="{% url 'travel:details' album.id %}">{{ album.album_title }}</a><br>
-                    <a href="{% url 'travel:delete-album' album.id %}">Delete album</a>
-                </li>
-            </ul>
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <ul>
+                            <li>
+                                <img src="{{ album.album_logo.url }}" width="250" height="250" class="img-responsive"><br>
+                                <a href="{% url 'travel:details' album.id %}"><h3>{{ album.album_title }}</h3></a><br>  
+                                <a href="{% url 'travel:delete-album' album.id %}" class="btn btn-xs btn-danger">Delete album</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         {% else %}
             <h1> You have no albums</h1>
-            <a href="{% url 'travel:album-add' %}">Add an album</a>
+            <a href="{% url 'travel:album-add' %}" class="btn btn-lg btn-success" style="margin-left: 10px;">Add an album</a>
         {% endif %}
+        </div>
 
     </div>
 {% endblock %}

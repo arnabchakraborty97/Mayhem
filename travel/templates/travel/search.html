@@ -7,7 +7,7 @@
 
         <!-- Search matches with albums :  -->
 
-        {% if albums %}
+        <!-- {% if albums %}
             <h1>Album matches : </h1>
             <ul>
                 {% for album in albums %}
@@ -19,24 +19,53 @@
                     </li>
                 {% endfor %}
             </ul>
+        {% endif %} -->
+
+        {% if albums %}
+            <h1>Album matches : </h1>
+            {% for album in albums %}
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <ul>
+                            <li>
+                                <img src="{{ album.album_logo.url }}" width="250" height="250" class="img-responsive"><br>
+                                <a href="{% url 'travel:details' album.id %}"><h3>{{ album.album_title }}</h3></a><br>  
+                                <a href="{% url 'travel:delete-album' album.id %}" class="btn btn-xs btn-danger">Delete album</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         {% endif %}
+
+    </div>
+
+    <div class="container">
 
         <!-- Search matches with photos -->
 
+
         {% if photos %}
             <h1>Photo matches : </h1>
-            <ul>
-                {% for photo in photos %}
-                    <l1>
-                        <img src="{{ photo.photo_file.url }}" width="200" height="200" class="img-responsive"><br>
-                        {{ photo.photo_caption }}<br>
-                        <a href="{% url 'travel:delete-photo' photo.album.id photo.id %}">Delete photo</a>
-                    </l1>
+
+            {% for photo in photos %}
+                <div class="col-sm-12 col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <ul>
+                                    <li>
+                                        <img src="{{ photo.photo_file.url }}" width="200" height="200" class="img-responsive"><br>
+                                        <h3>{{ photo.photo_caption }}</h3>
+                                        <a href="{% url 'travel:delete-photo' photo.album.id photo.id %}" class="btn btn-xs btn-danger">Delete photo</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
-            </ul>
-        {% endif %}
-
-
+            {% endif %}
 
     </div>
 {% endblock %}

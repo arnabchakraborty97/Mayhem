@@ -1,3 +1,26 @@
 body {
-    background: white;
+	background-image: url(images/background.jpg);
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    display: inline-block;
+}
+
+a {
+    display: inline-block;
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+    opacity: 0.8;
+    color: black;
+}
+
+h1 {
+	padding: 10px 0px 50px 0px;
 }

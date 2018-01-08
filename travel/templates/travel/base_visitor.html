@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    {% load staticfiles %}
 
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
@@ -10,10 +11,18 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Vollkorn+SC" rel="stylesheet">
 
-</head>
-<body>
+    <style>
+        
+        .panel {
+            background: transparent; border: none; 
+            box-shadow: none; 
+        }
+    </style>
 
-    <nav class="nav navbar-default">
+</head>
+<body background="{% static 'travel/images/background.jpg' %}" style="background-size: cover; background-repeat: no-repeat;">
+
+    <nav class="nav navbar-inverse">
         <div class="container-fluid">
 
 
