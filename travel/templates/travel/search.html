@@ -5,21 +5,7 @@
 
     <div class="container">
 
-        <!-- Search matches with albums :  -->
-
-        <!-- {% if albums %}
-            <h1>Album matches : </h1>
-            <ul>
-                {% for album in albums %}
-                    <li>
-                        <img src="{{ album.album_logo.url }}" width="200" height="200" class="img-responsive"><br>
-                        <a href="{% url 'travel:details' album.id %}">{{ album.album_title }}</a><br>
-                        <a href="{% url 'travel:delete-album' album.id %}">Delete album</a>
-
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %} -->
+        <!-- Search matches with Albums -->
 
         {% if albums %}
             <h1>Album matches : </h1>
