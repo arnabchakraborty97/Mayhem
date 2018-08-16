@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Album(models.Model):
-    user = models.ForeignKey(User, default=1)
+    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
     album_title = models.CharField(max_length=500)
     album_logo = models.ImageField(upload_to='album_logo')
 

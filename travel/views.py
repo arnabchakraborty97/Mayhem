@@ -6,7 +6,7 @@ from .models import Album, Photo
 
 
 def album_create(request):
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return render(request, 'travel/login.html')
     else:
         form = AlbumForm(request.POST or None, request.FILES or None)
@@ -57,7 +57,7 @@ def photo_delete(request, album_id, photo_id):
 
 
 def details(request, album_id):
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return render(request, 'travel/login.html')
     else:
         user = request.user
@@ -66,10 +66,10 @@ def details(request, album_id):
 
 
 def index(request):
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return render(request, 'travel/login.html')
     else:
-        albums = Album.objects.filter(user=request.user)
+        albums = Album.objects.all()
         return render(request, 'travel/index.html', {'albums': albums})
 
 
@@ -115,7 +115,7 @@ def register(request):
 
 
 def search(request):
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return render(request, 'travel/login.html')
     else:
         albums = Album.objects.filter(user=request.user)
